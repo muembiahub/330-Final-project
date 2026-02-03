@@ -1,31 +1,64 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-Us">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sachelle-Store</title>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="A Web App  of a fake store">
+  <meta name="keywords" content="fake store, products">
+  <meta name="author" content="Jonathan Muembia">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <title>Sachelle Store</title>
+  <link rel="stylesheet" href="style/base.css">
+
+  <script src="scripts/base.js"></script>
 </head>
 <body>
-    <header>
-        <nav>
-            <ul>
-                <li><a href="#">Home</a></li>
-                <li><a href="#">About</a></li>
-                <li><a href="#">Contact</a></li>
-                <li><a href="#">Cart</a></li>
-            </ul>
-        </nav>
-    </header>
-    <main>
-        <h1> Sachelle Store</h1>
-        <div>
-            <section>
+  <div class="layout">
+    <!-- Sidebar gauche -->
+    <aside class="sidebar">
+      <h1 class="logo">SachelleStore</h1>
+      <div>
+         <h2>CATEGORIES</h2>
+        <ul>
+        <li><a href="#home"><i class="fa-solid fa-house"></i> Home</a></li>
+        <li><a href="#electronics"><i class="fa-solid fa-mobile-screen"></i> Electronics</a></li>
+        <li><a href="#fashion"> <i class="fa-solid fa-tshirt"></i> Fashion</a></li>
+        <li><a href="#home"><i class="fa-solid fa-bed"></i> Home & Living</a></li>
+        <li><a href="#sports"><i class="fa-solid fa-football"></i> Sports</a></li>
+      </ul>
+      </div>
+     
+      
+    </aside>
 
-            </section>
-        </div>
-
+    <!-- Section principale -->
+    <main class="main">
+      <div id="search-input">
+        <input type="text" placeholder="Search products...">
+      </div>
+      <h1>Featured Products</h1>
+      <div id="product-list" class="grid">
+      </div>
     </main>
-    <footer>
-    </footer>
+
+    <!-- Sidebar droite -->
+   <aside class="promo">
+  <h1>Promotions</h1>
+  <button class="cart-button">
+  <i class="fa fa-shopping-cart"></i>
+  <span class="cart-count">0</span>
+</button>
+
+  <div class="winter"></div>
+  <div class="shipping banner-promo"></div>
+  <div class="holiday"></div>
+  <div class="summer"></div>
+  <div class="autumn"></div>
+  <div class="spring"></div>
+</aside>
+
+  </div>
 </body>
 </html>
