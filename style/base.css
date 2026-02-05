@@ -1,5 +1,13 @@
 /* base.css */
 
+
+
+
+/* Classes */
+.fa-rotate-by {
+  transform: rotate(var(--fa-rotate-angle, 0deg));
+}
+/* Variables */
 :root {
   --bg: #f5fbff;
   --bg-alt: #eaf5ff;
@@ -13,53 +21,26 @@
   --shadow: 0 10px 30px rgba(43,125,233,0.08);
 }
 
-
-/* Layout global */
+/* Layout */
 .layout {
   display: grid;
   grid-template-columns: 200px 1fr 260px;
   min-height: 100vh;
   gap: 0.5rem;
- 
 }
 
 /* Sidebar gauche */
-.sidebar,.promo{
-  background: linear-gradient(90deg,  var(--card), var(--primary-600));
+.sidebar,
+.promo {
+  background: linear-gradient(90deg, var(--card), var(--primary-600));
   color: var(--text);
   padding: 0.5rem;
 }
 
-.logo {
-  margin-top: 0;
-  text-align: left;
-  border: none;
-  background: linear-gradient(14deg, var(--special),  var(--primary-600));
-}
-.sidebar h2{font-size: 1rem; color: var(--text);}
-
-
-.sidebar a:hover {
+.sidebar h2 {
+  font-size: 1rem;
   color: var(--text);
 }
-
-.sidebar a:active {
-  color: var(--text);
-}
-
-.sidebar a:focus {
-  color: var(--special);
-}
-
-.sidebar a:visited {
-  color: var(--primary-600);
-}
-
-.sidebar a:link {
-  color: var(--text);
-}
-
-
 
 .sidebar ul {
   list-style: none;
@@ -75,8 +56,20 @@
   text-decoration: none;
 }
 
-/* Sidebar droite */
+.sidebar a:hover,
+.sidebar a:active {
+  color: var(--text);
+}
 
+.sidebar a:focus {
+  color: var(--special);
+}
+
+.sidebar a:visited {
+  color: var(--primary-600);
+}
+
+/* Sidebar droite */
 .promo h1 {
   text-align: center;
   margin-bottom: 1rem;
@@ -88,32 +81,20 @@
   text-align: center;
   color: var(--text);
   opacity: 0.8;
-  animation-name: animationPromo ;
   position: relative;
-  animation-duration: 4s;
-  animation-iteration-count: infinite;
-  animation-direction: alternate;
-  animation-timing-function: linear;
+  animation: animationPromo 4s linear infinite alternate;
 }
 
 @keyframes animationPromo {
-  0% {
-    transform: scale(0.9);
-
-  }
-  50% {
-    transform: scale(1.0);
-  }
-  
-  100% {
-    transform: scale(0.9);
-  }
-
+  0% { transform: scale(0.9); }
+  50% { transform: scale(1.0); }
+  100% { transform: scale(0.9); }
 }
+
 .promo-header {
   display: flex;
   align-items: center;
-  justify-content: space-around; 
+  justify-content: space-around;
 }
 
 .promo-header h1 {
@@ -130,49 +111,49 @@
   align-items: center;
 }
 
+.banner-button {
+  background: var(--primary);
+  color: var(--text);
+  padding: 0.5rem 0.8rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: bold;
+  display: inline-block;
+  margin-bottom: 1rem;
+}
 
-
-
-.banner-button{background: var(--primary); color: var(--text); padding: 0.5rem 0.8rem; border-radius: 8px;font-size: 1rem; font-weight: bold; display: inline-block; margin-bottom: 1rem;}
-
-
-
-/* Seasonal colors */
+/* Seasonal banners */
 .banner-winter { background: linear-gradient(to right, #74ebd5, #ACB6E5); }
 .banner-summer { background: linear-gradient(to right, #f9d423, #ff4e50); }
 .banner-autumn { background: linear-gradient(to right, #ff7e5f, #feb47b); }
 .banner-spring { background: linear-gradient(to right, #a8e063, #56ab2f); }
 .banner-holiday { background: linear-gradient(to right, #ff4e50, #8e2de2); }
 .banner-shipping { background: linear-gradient(to right, #43cea2, #185a9d); }
-.banner-sale { background: linear-gradient(to right, #ff4b1f, #ff9068); }
+.banner-sale,
 .banner-promo { background: linear-gradient(to right, #ff4b1f, #ff9068); }
 .banner-new-arrivals { background: linear-gradient(to right, #b0624e, #0dad33); }
 
-
-
-
-
-/* Section principale */
+/* Main section */
 .main {
   padding: 1rem;
 }
 
-/* CSS */
+/* Search box */
 .search-box {
-  position: relative; /* position relative for icon positioning */
-  width: 100%;    /* full width */
+  position: relative;
+  width: 100%;
 }
 
 .search-box input {
   width: 100%;
-  padding: 10px 10px 10px 35px; /* extra left padding for icon */
+  padding: 10px 10px 10px 35px;
   border: 1px solid #ccc;
-  border-radius: 20px;          /* rounded edges */
+  border-radius: 20px;
   font-size: 10px;
 }
 
 .search-box i {
-  position: absolute;  
+  position: absolute;
   left: 12px;
   top: 50%;
   transform: translateY(-50%);
@@ -180,12 +161,14 @@
   font-size: 16px;
 }
 
-
+/* Grid */
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 0.4rem;
 }
+
+/* Shopping cart */
 #shopping-cart {
   color: #0b6def;
   font-size: 1rem;
@@ -193,31 +176,58 @@
   cursor: pointer;
   margin-left: 1rem;
   transition: transform 0.3s ease;
-  &:hover {
-    transform: scale(1.1);
-  }
 }
 
-.product-card {  background: var(--bg);  padding: 10px;  border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); border: 2px dashed #0b6def;
-  text-align: center;  transition: transform 0.3s ease;
-   & img {  width: 50%;  height: 200px;  border-radius: 8px;  margin-bottom: 0.5rem; }
-   & h2 {  margin: 0.5rem 0;  }
-   & p {  margin: 0.5rem 0; color: var(--primary-600);   }
-   & button {  padding: 0.5rem 1rem; background: var(--primary-600);  color: white;  border: none;  border-radius: 4px;  cursor: pointer;  transition: background 0.3s ease;}
-   &:hover {
+#shopping-cart:hover {
+  transform: scale(1.1);
+}
+
+/* Product card */
+.product-card {
+  background: var(--bg);
+  padding: 10px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  border: 2px dashed #0b6def;
+  text-align: center;
+  transition: transform 0.3s ease;
+}
+
+.product-card img {
+  width: 50%;
+  height: 200px;
+  border-radius: 8px;
+  margin-bottom: 0.5rem;
+}
+
+.product-card h2 {
+  margin: 0.5rem 0;
+}
+
+.product-card p {
+  margin: 0.5rem 0;
+  color: var(--primary-600);
+}
+
+.product-card button {
+  padding: 0.5rem 1rem;
+  background: var(--primary-600);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.product-card:hover {
   transform: translateY(-5px);
   background: linear-gradient(to bottom, var(--primary-600), #6293d3);
 }
-}
 
-
-
-
-
+/* Pagination */
 .pagination {
   display: flex;
-  justify-content: start;
-  align-items: space-between;
+  justify-content: space-between; /* corrected */
   gap: 400px;
   margin: 20px 0;
 }
@@ -234,14 +244,12 @@
   background: #ccc;
   cursor: not-allowed;
 }
+
 .pagination button:not(:disabled):hover {
   background: #005fa3;
-
 }
 
-
-
-
+/* Responsive */
 @media (max-width: 768px) {
   .layout {
     grid-template-columns: 2fr;
@@ -251,8 +259,9 @@
       "promo";
   }
 
-  .sidebar, .main, .promo {
+  .sidebar,
+  .main,
+  .promo {
     width: 100%;
   }
 }
-
