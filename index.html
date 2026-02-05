@@ -1,64 +1,140 @@
 <!DOCTYPE html>
-<html lang="en-Us">
+<html lang="en-US">
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="A Web App  of a fake store">
+  <meta name="description" content="A Web App of a fake store">
   <meta name="keywords" content="fake store, products">
   <meta name="author" content="Jonathan Muembia">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
+  
   <title>Sachelle Store</title>
+
+  <!-- Fonts & Styles -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link rel="stylesheet" href="style/base.css">
 
-  <script src="scripts/base.js"></script>
+  <!-- Scripts -->
+  <script src="scripts/base.js" defer></script>
 </head>
 <body>
   <div class="layout">
-    <!-- Sidebar gauche -->
+    
+    <!-- Left Sidebar -->
     <aside class="sidebar">
       <h1 class="logo">SachelleStore</h1>
-      <div>
-         <h2>CATEGORIES</h2>
-        <ul>
-        <li><a href="#home"><i class="fa-solid fa-house"></i> Home</a></li>
-        <li><a href="#electronics"><i class="fa-solid fa-mobile-screen"></i> Electronics</a></li>
-        <li><a href="#fashion"> <i class="fa-solid fa-tshirt"></i> Fashion</a></li>
-        <li><a href="#home"><i class="fa-solid fa-bed"></i> Home & Living</a></li>
-        <li><a href="#sports"><i class="fa-solid fa-football"></i> Sports</a></li>
-      </ul>
-      </div>
-     
       
+      <nav>
+        <h2>Categories</h2>
+        <ul>
+          <li><a href="#home"><i class="fa-solid fa-house"></i> Home</a></li>
+          <li><a href="#electronics"><i class="fa-solid fa-mobile-screen"></i> Electronics</a></li>
+          <li><a href="#fashion"><i class="fa-solid fa-shirt"></i> Fashion</a></li>
+          <li><a href="#living"><i class="fa-solid fa-bed"></i> Home & Living</a></li>
+          <li><a href="#sports"><i class="fa-solid fa-football"></i> Sports</a></li>
+        </ul>
+      </nav>
+
+      <nav>
+        <h2>Account</h2>
+        <ul>
+          <li><a href="#login"><i class="fa-solid fa-user"></i> Login</a></li>
+          <li><a href="#register"><i class="fa-solid fa-user-plus"></i> Register</a></li>
+        </ul>
+      </nav>
     </aside>
 
-    <!-- Section principale -->
+    <!-- Main Content -->
     <main class="main">
-      <div id="search-input">
-        <input type="text" placeholder="Search products...">
+      <!-- Search -->
+      <div class="search-box">
+        <label for="search"><i class="fa-solid fa-search"></i></label>
+        <input id="search" type="text" placeholder="Search products..." aria-label="Search products">
       </div>
+
+      <!-- Products -->
       <h1>Featured Products</h1>
-      <div id="product-list" class="grid">
+      <div id="product-list" class="grid"></div>
+
+      <!-- Pagination -->
+      <div class="pagination">
+        <button id="prevPage">Previous</button>
+        <button id="nextPage">Next</button>
       </div>
+
+      <!-- Cart -->
+      <section id="cart-container">
+        <h2>Shopping Cart</h2>
+        <!-- Cart items will be rendered here -->
+      </section>
+
+      <!-- Login -->
+      <section id="login">
+        <form action="/login" method="post">
+          <h1>Login</h1>
+          <label for="login-username">Username</label>
+          <input type="text" id="login-username" name="username" placeholder="Username" required>
+
+          <label for="login-password">Password</label>
+          <input type="password" id="login-password" name="password" placeholder="Password" required>
+
+          <button type="submit">Login</button>
+        </form>
+      </section>
+
+      <!-- Register -->
+      <section id="register">
+        <form action="/register" method="post">
+          <h1>Register</h1>
+
+          <label for="username">Username</label>
+          <input type="text" id="username" name="username" placeholder="Username" required>
+
+          <label for="fullname">Full Name</label>
+          <input type="text" id="fullname" name="fullname" placeholder="Full Name" required>
+
+          <fieldset>
+            <legend>Gender</legend>
+            <label><input type="radio" name="gender" value="male"> Male</label>
+            <label><input type="radio" name="gender" value="female"> Female</label>
+          </fieldset>
+
+          <fieldset>
+            <legend>Age</legend>
+            <label><input type="radio" name="age" value="18-25"> 18-25</label>
+            <label><input type="radio" name="age" value="26-35"> 26-35</label>
+            <label><input type="radio" name="age" value="36-50"> 36-50</label>
+          </fieldset>
+
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" placeholder="Password" required>
+
+          <button type="submit">Register</button>
+        </form>
+      </section>
     </main>
 
-    <!-- Sidebar droite -->
-   <aside class="promo">
-  <h1>Promotions</h1>
-  <button class="cart-button">
-  <i class="fa fa-shopping-cart"></i>
-  <span class="cart-count">0</span>
-</button>
+    <!-- Right Sidebar -->
+    <aside class="promo">
+      <div class="promo-header">
+        <h1>Promotions</h1>
+        <button class="cart-button">
+          <i class="fa fa-shopping-cart" id="shopping-cart"></i>
+          <span class="cart-count">0</span>
+        </button>
+      </div>
 
-  <div class="winter"></div>
-  <div class="shipping banner-promo"></div>
-  <div class="holiday"></div>
-  <div class="summer"></div>
-  <div class="autumn"></div>
-  <div class="spring"></div>
-</aside>
-
+      <section class="animation-promo">
+        <div class="banner banner-promo"></div>
+        <div class="banner banner-winter"></div>
+        <div class="banner banner-summer"></div>
+        <div class="banner banner-autumn"></div>
+        <div class="banner banner-holiday"></div>
+        <div class="banner banner-new-arrivals"></div>
+        <div class="banner banner-sale"></div>
+        <div class="banner banner-promo-2 banner-spring"></div>
+      </section>
+    </aside>
   </div>
 </body>
 </html>

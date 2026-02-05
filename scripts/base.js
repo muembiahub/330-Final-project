@@ -1,40 +1,24 @@
-// -------------------- Global Variables --------------------
+// -------------------- Global State --------------------
 let cart = [];
 let products = [];
 
-// -------------------- Main Script --------------------
-document.addEventListener("DOMContentLoaded", () => {
-  const searchInput = document.getElementById('search-input');
-  const productList = document.getElementById('product-list');
+// -------------------- Product Service --------------------
+const ProductService = {
+  async fetchProducts() {
+    try {
+      const res = await fetch('https://fakestoreapi.com/products');
+      products = await res.json();
+      return products;
+    } catch (error) {
+      console.error('Error fetching products:', error);
+      return [];
+    }
+  }
+};
 
-  // -------------------- Fetch Products --------------------
-  fetch('https://fakestoreapi.com/products')
-    .then(res => res.json())
-    .then(data => {
-      products = data;
-      displayProducts(productList, products); // show all initially
-    })
-    .catch(error => console.error('Error fetching products:', error));
-
-  // -------------------- Search Filter --------------------
-  searchInput.addEventListener('input', () => {
-    const searchTerm = searchInput.value.toLowerCase();
-    const filteredProducts = products.filter(product =>
-      product.title.toLowerCase().includes(searchTerm)
-    );
-    displayProducts(productList, filteredProducts);
-  });
-
-  // -------------------- Global Click Handler --------------------
-  document.addEventListener('click', (e) => {
-    const productId = parseInt(e.target.getAttribute('data-id'));
-    if (e.target.classList.contains('add-to-cart')) addToCart(productId);
-    if (e.target.classList.contains('increase')) increaseQuantity(productId);
-    if (e.target.classList.contains('decrease')) decreaseQuantity(productId);
-  });
-
-  // -------------------- Product Rendering --------------------
-  function displayProducts(container, productArray) {
+// -------------------- UI Rendering --------------------
+const UI = {
+  displayProducts(container, productArray) {
     container.innerHTML = '';
 
     if (productArray.length === 0) {
@@ -46,54 +30,17 @@ document.addEventListener("DOMContentLoaded", () => {
       const div = document.createElement('div');
       div.classList.add('product-card');
       div.innerHTML = `
-        <img src="${product.image}" alt="${product.title}" width="100">
+        <img src="${product.image}" alt="${product.title}">
         <h2>${product.title}</h2>
         <p>$${product.price}</p>
         <button class="add-to-cart" data-id="${product.id}">Add to Cart</button>
       `;
       container.appendChild(div);
     });
-  }
+  },
 
-  // -------------------- Cart Logic --------------------
-  function addToCart(productId) {
-    const product = products.find(p => p.id === productId);
-    if (!product) return;
-
-    const existingItem = cart.find(item => item.id === productId);
-    if (existingItem) {
-      existingItem.quantity++;
-      console.log(`Quantity of ${product.title} increased to ${existingItem.quantity}`);
-    } else {
-      cart.push({ id: product.id, title: product.title, price: product.price, quantity: 1 });
-      console.log(`Added ${product.title} to cart`);
-    }
-    renderCart();
-  }
-
-  function increaseQuantity(productId) {
-    const item = cart.find(item => item.id === productId);
-    if (item) {
-      item.quantity++;
-      renderCart();
-    }
-  }
-
-  function decreaseQuantity(productId) {
-    const itemIndex = cart.findIndex(item => item.id === productId);
-    if (itemIndex > -1) {
-      if (cart[itemIndex].quantity > 1) {
-        cart[itemIndex].quantity--;
-      } else {
-        cart.splice(itemIndex, 1);
-      }
-      renderCart();
-    }
-  }
-
-  // -------------------- Cart Rendering --------------------
-  function renderCart() {
-    const cartDiv = document.getElementById('card');
+  renderCart() {
+    const cartDiv = document.getElementById('cart-container'); 
     cartDiv.innerHTML = '';
 
     if (cart.length === 0) {
@@ -102,15 +49,16 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     const ul = document.createElement('ul');
-
     cart.forEach(item => {
       const li = document.createElement('li');
       li.classList.add('cart-item');
+
       li.innerHTML = `
-        ${item.title} - $${item.price} x ${item.quantity}
+        <span>${item.title} - $${item.price} x ${item.quantity}</span>
+        <span>Subtotal: $${(item.price * item.quantity).toFixed(2)}</span>
         <div>
-          <button class="decrease" data-id="${item.id}">–</button>
-          <button class="increase" data-id="${item.id}">+</button>
+          <button class="decrease" data-id="${item.id}" aria-label="Decrease quantity">–</button>
+          <button class="increase" data-id="${item.id}" aria-label="Increase quantity">+</button>
         </div>
       `;
       ul.appendChild(li);
@@ -120,41 +68,156 @@ document.addEventListener("DOMContentLoaded", () => {
     const totalDiv = document.createElement('p');
     totalDiv.textContent = `Total: $${total.toFixed(2)}`;
 
+    const payButton = document.createElement('button');
+    payButton.textContent = 'Pay Now';
+    payButton.classList.add('pay-button');
+    payButton.addEventListener('click', () => {
+      alert(`Proceeding to payment. Total: $${total.toFixed(2)}`);
+      // Or redirect to checkout
+      // window.location.href = '/checkout?total=' + total.toFixed(2);
+    });
+
     cartDiv.appendChild(ul);
     cartDiv.appendChild(totalDiv);
-  }
+    cartDiv.appendChild(payButton);
+  },
 
-  // -------------------- Banner Promo --------------------
-  function createBanner(className,title, url, buttonText) {
+  updateCartCount() {
+    const countSpan = document.querySelector('.cart-count');
+    if (!countSpan) return;
+    const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+    countSpan.textContent = totalItems;
+  },
+
+  createBanner(className, title, text, url) {
     const banner = document.querySelector(`.${className}`);
-    if (!banner) {
-      console.warn(`Banner with class "${className}" not found.`);
-      return;
-    }
+    if (!banner) return;
 
-    console.log(`Banner "${className}" found, adding content...`);
+    banner.innerHTML = `
+      <h2>${title}</h2>
+      <p>${text}</p>
+      <button class="banner-button">
+        ${["banner-promo", "banner-promo-2"].includes(className) ? "Shop Now" : "Learn More"}
+      </button>
+    `;
 
-    banner.innerHTML = "";
-    const titleText = document.createElement("h2");
-    titleText.textContent = title;
-    banner.appendChild(titleText);
-
-    const button = document.createElement("button");
-    button.className = "banner-button";
-    buttonText = className === "banner-promo" ? "Shop Now" : "Learn More";
-    button.textContent = buttonText;
-    banner.appendChild(button);
-    button.addEventListener("click", () => {
-      console.log(`Redirecting to ${url}`);
+    banner.querySelector("button").addEventListener("click", () => {
       window.location.href = url;
     });
   }
+};
 
-  // -------------------- Calls --------------------
-  createBanner('winter',' Winter Sale! 20% Off All Items!', 'https://www.example.com/winter-sale');
-  createBanner('summer', ' Summer Sale! Buy 1 Get 1 Free!', 'https://www.example.com/summer-sale');
-  createBanner('autumn', ' Autumn Clearance! Up to 50% Off!', 'https://www.example.com/autumn-sale');
-  createBanner('spring', ' Spring Specials! Fresh Deals Await!', 'https://www.example.com/spring-sale');
-  createBanner('holiday', ' Holiday Sale! Save Big on Gifts!', 'https://www.example.com/holiday-sale');
-  createBanner('banner-promo', 'Free Shipping on Orders Over $50!', 'https://www.example.com/shipping');
+// -------------------- Cart Logic --------------------
+const Cart = {
+  add(productId) {
+    const product = products.find(p => p.id === productId);
+    if (!product) return;
+
+    const existingItem = cart.find(item => item.id === productId);
+    if (existingItem) {
+      existingItem.quantity++;
+    } else {
+      cart.push({ id: product.id, title: product.title, price: product.price, quantity: 1 });
+    }
+    UI.renderCart();
+    UI.updateCartCount();
+  },
+
+  increase(productId) {
+    const item = cart.find(item => item.id === productId);
+    if (item) {
+      item.quantity++;
+      UI.renderCart();
+      UI.updateCartCount();
+    }
+  },
+
+  decrease(productId) {
+    const itemIndex = cart.findIndex(item => item.id === productId);
+    if (itemIndex > -1) {
+      if (cart[itemIndex].quantity > 1) {
+        cart[itemIndex].quantity--;
+      } else {
+        cart.splice(itemIndex, 1);
+      }
+      UI.renderCart();
+      UI.updateCartCount();
+    }
+  }
+};
+
+// -------------------- Search Logic --------------------
+const Search = {
+  filter(term) {
+    const searchTerm = term.toLowerCase();
+    const filteredProducts = products.filter(product =>
+      product.title.toLowerCase().includes(searchTerm)
+    );
+    const productList = document.getElementById('product-list');
+    UI.displayProducts(productList, filteredProducts);
+  }
+};
+
+// -------------------- Initialization --------------------
+document.addEventListener("DOMContentLoaded", async () => {
+  const searchInput = document.querySelector('.search-box input');
+  const productList = document.getElementById('product-list');
+  const prevPageBtn = document.getElementById('prevPage');
+  const nextPageBtn = document.getElementById('nextPage');
+  const cartButton = document.querySelector('.cart-button');
+
+  let currentIndex = 0;
+  const limit = 4;
+
+  // Fetch and display products
+  const data = await ProductService.fetchProducts();
+  UI.displayProducts(productList, data.slice(currentIndex, currentIndex + limit));
+
+  // Pagination
+  nextPageBtn.addEventListener('click', () => {
+    if (currentIndex + limit < products.length) {
+      currentIndex += limit;
+      UI.displayProducts(productList, products.slice(currentIndex, currentIndex + limit));
+    }
+  });
+
+  prevPageBtn.addEventListener('click', () => {
+    if (currentIndex - limit >= 0) {
+      currentIndex -= limit;
+      UI.displayProducts(productList, products.slice(currentIndex, currentIndex + limit));
+    }
+  });
+
+  // Search
+  searchInput.addEventListener('input', () => Search.filter(searchInput.value));
+
+  // Global click handler
+  document.addEventListener('click', (e) => {
+    const productId = parseInt(e.target.getAttribute('data-id'));
+    if (e.target.classList.contains('add-to-cart')) Cart.add(productId);
+    if (e.target.classList.contains('increase')) Cart.increase(productId);
+    if (e.target.classList.contains('decrease')) Cart.decrease(productId);
+  });
+
+  // Cart button toggle
+  if (cartButton) {
+    cartButton.addEventListener('click', () => {
+      UI.renderCart();
+      document.getElementById('cart-container').classList.toggle('visible');
+    });
+  }
+
+  // Banners
+  const banners = [
+    {class: 'banner-promo', title: 'Free Shipping', text: 'Enjoy free shipping on orders over $50', url: 'https://www.example.com/free-shipping'},
+    {class: 'banner-winter', title: 'Winter Sale', text: 'Save 20% on winter essentials!', url: 'https://www.example.com/winter-sale'},
+    {class : 'banner-summer', title: 'Summer Sale', text: 'Hot deals up to 50% off!', url: 'https://www.example.com/summer-sale'},
+    {class: 'banner-autumn', title: 'Autumn Clearout', text: 'Clear out your autumn wardrobe with up to 70% off', url: 'https://www.example.com/autumn-clearout'},
+    {class: 'banner-holiday', title: 'Holiday Sale', text: 'Shop our holiday collection and save up to 30% off', url: 'https://www.example.com/holiday-sale'},
+    {class: 'banner-new-arrivals', title: 'New Arrivals', text: 'Explore our latest arrivals and find your next favorite piece', url: 'https://www.example.com/new-arrivals'},
+    {class: 'banner-sale', title: 'Sale', text: 'Shop our sale section and find great deals on our best-selling items', url: 'https://www.example.com/sale'},
+    {class: 'banner-promo-2', title: 'Spring Sale', text: 'Spring into savings with up to 40% off our seasonal collection', url: 'https://www.example.com/spring-sale'},
+  ];
+
+  banners.forEach(b => UI.createBanner(b.class, b.title, b.text, b.url));
 });
